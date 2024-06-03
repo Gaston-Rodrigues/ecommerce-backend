@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+
 import { userModel } from "../models/user.model.js";
 
 export class User{
     async getUser(){
         try {
             const result = await userModel.find()
-            return result
+            return {result}
 
         } catch (error) {
             return {message: "User dont found", error}
@@ -16,7 +16,7 @@ export class User{
     async getUserById(uId){
         try {
              const result = await userModel.findOne({_id:uId})
-            return result
+          return result
         } catch (error) {
             return {message: "user dont exist", error}
         }
@@ -28,7 +28,7 @@ export class User{
     async createUser(user){
         try {
             const create = await userModel.create(user)
-            return {message: "User created", create}
+            return {message: "User created"}
         } catch (error) {
             return {message: "User dont create", error}
         }
@@ -37,7 +37,12 @@ export class User{
     async deleteUserById(uId){
          try {
             const deleted = await userModel.deleteOne({_id: uId})
-            return {message:"User deleted"}
+            if(!deleted){
+                return {message: "User dont exist"}
+            }
+            else{
+                return{message:"User deleted"}
+            }
          } catch (error) {
             return {message: "User dont deleted", error}
          }
