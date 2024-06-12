@@ -31,18 +31,42 @@ export const getUserById = async(req,res)=>{
 }
 
 export const createUser = async(req,res)=>{
-  try {  
-     const user= req.body
-    const result = await userMongo.createUser(user)
-    if(result){
-         return res.send({message: "user created"}) 
-    }
-   
-  } catch (error) {
-    res.status(400).send(error)
-   
+  req.session.user= {
+  first_name : req.user.first_name,
+  last_name: req.user.last_name,
+  age: req.user.age,
+  email: req.user.email,
+  role: req.user.role
   }
+  res.send({message: "Bienvenido"})
 }
+
+export const loginUser= async(req,res)=>{
+    if(!req.user){
+        return res.status(400).send({message: "Error in credentials"})
+    }   
+    req.session.user= {
+        first_name : req.user.first_name,
+        last_name: req.user.last_name,
+        age: req.user.age,
+        email: req.user.email,
+        role: req.user.role
+        }
+        res.redirect('/products')
+}
+
+export const logout= async(req,res)=>{
+    try {
+        req.session.destroy((err)=>{
+            if(err){
+                return res.status(500).json({message: "Fallo al realizar el logout"})
+            }
+            res.send({redirect: '/login'})
+        })
+    } catch (error) {
+        res.status(400).send({error})
+    }
+} 
 
 
 
