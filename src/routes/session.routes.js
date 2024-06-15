@@ -5,10 +5,10 @@ import { checkUser } from "../middleware/auth.js";
 
 const sessionRoutes = Router()
 
-sessionRoutes.post(`/register`, checkUser,passport.authenticate('register',{failureRedirect: '/failregister'}),createUser)
-sessionRoutes.post('/login', checkUser,passport.authenticate('login',{failureRedirect:'/faillogin'}), loginUser)
+sessionRoutes.post(`/register`,passport.authenticate('register',{failureRedirect: '/failregister'}),createUser)
+sessionRoutes.post('/login',passport.authenticate('login',{failureRedirect:'/faillogin'}), loginUser)
 sessionRoutes.post('/logout', logout)
-sessionRoutes.get(`/`, checkUser, getUsers )
+sessionRoutes.get(`/`, getUsers )
 sessionRoutes.get('/:uId', getUserById)
 sessionRoutes.delete('/:uId', deleteUser)
 

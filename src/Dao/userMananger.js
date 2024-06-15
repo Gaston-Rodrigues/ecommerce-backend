@@ -32,20 +32,14 @@ export class User{
         } catch (error) {
             return {message: "User dont create", error}
         }
-    }
+    } 
 
     async deleteUserById(uId){
          try {
             const deleted = await userModel.deleteOne({_id: uId})
-            if(!deleted){
-                return {message: "User dont exist"}
-            }
-            else{
-                return{message:"User deleted"}
-            }
+            return deleted
          } catch (error) {
             return {message: "User dont deleted", error}
          }
     }
-
-}
+    }
