@@ -8,16 +8,22 @@ import session from "express-session"
 import MongoStore from "connect-mongo"
 import initializePassport from "./config/passport.config.js"
 import passport from "passport"
-
+import { Command } from "commander"
+import { getVariables } from "./config/config.js"
 
 const cors = corss()
 const app = express() 
-const PORT = 8080
+
+
+const program = new Command()
+program.option('--mode <mode>', 'Modo de trabajo', 'production')
+const options = program.parse()
+const{PORT, MONGO_URL} = getVariables(options)
 
 app.use(session({
     secret :'desarrollo',
     store : MongoStore.create({
-        mongoUrl: `mongodb+srv://fabelinho5:159Chelseafc@coder.h2ztgkp.mongodb.net/ecommerce-backend` 
+        mongoUrl: MONGO_URL 
     }),
     resave : true,
     saveUninitialized: true
@@ -33,9 +39,9 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static(`public`))
 
-mongoose.connect(`mongodb+srv://fabelinho5:159Chelseafc@coder.h2ztgkp.mongodb.net/ecommerce-backend`)
+mongoose.connect(MONGO_URL)
 
-app.use(`/api/user`,sessionRoutes)
+app.use(`/api/session`,sessionRoutes)
 app.use('/api/product', productRoutes)
 app.use('/api/cart', cartRoutes)
 

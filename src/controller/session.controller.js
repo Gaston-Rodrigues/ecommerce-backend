@@ -17,6 +17,7 @@ export const getUsers = async(req,res)=>{
  
 }
 
+
 export const getUserById = async(req,res)=>{
     try {
         const {uId} = req.params
@@ -52,7 +53,7 @@ export const loginUser= async(req,res)=>{
         email: req.user.email,
         role: req.user.role
         }
-        res.redirect('/products')
+        res.redirect('/product')
 }
 
 export const logout= async(req,res)=>{
@@ -86,3 +87,10 @@ export const deleteUser = async(req,res)=>{
         
     }
 }
+
+export const getGoogle = async(req,res)=>{
+   req.session.user = req.user
+   res.redirect('/product') //endpoint principal
+
+}
+                                                                                                                                                                                                                                                                            
