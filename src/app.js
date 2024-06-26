@@ -41,7 +41,7 @@ app.use(express.static(`public`))
 
 mongoose.connect(MONGO_URL)
 
-app.use(`/api/session`,sessionRoutes)
+app.use('/api/session',sessionRoutes)
 app.use('/api/product', productRoutes)
 app.use('/api/cart', cartRoutes)
 

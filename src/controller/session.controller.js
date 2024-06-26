@@ -96,12 +96,11 @@ export const getGoogle = async(req,res)=>{
 
 export const handleGoogleLogin = async (req, res) => {
     const { code } = req.body;
-    const clientId = "417028028525-6cp62mf7v4odj5ek46c3tih1q5acf8e6.apps.googleusercontent.com"; // Reemplaza con tu ID de cliente
-    const clientSecret = "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"; // Reemplaza con tu secreto de cliente
-    const redirectUri = 'localhost:5173'; // Reemplaza con tu URI de redirección
+    const clientId = "417028028525-6cp62mf7v4odj5ek46c3tih1q5acf8e6.apps.googleusercontent.com"; 
+    const clientSecret = "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"; 
+    const redirectUri = 'api/session/product'; 
 
     try {
-        // Intercambio del código de autorización por tokens
         const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
             code,
             client_id: clientId,
@@ -112,13 +111,10 @@ export const handleGoogleLogin = async (req, res) => {
 
         const { access_token } = tokenResponse.data;
 
-        // Obtener información del usuario con el token de acceso
         const userInfoResponse = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`);
         const userData = userInfoResponse.data;
 
-        // Aquí puedes manejar la creación de usuarios en tu base de datos y devolver la información necesaria al frontend.
-        // Suponiendo que tienes una función para crear o encontrar el usuario en tu base de datos:
-        let user = await userMongo.findOrCreateUser(userData); // Asegúrate de implementar esta función en tu userManager
+        let user = await userMongo.findOrCreateUser(userData); 
 
         req.session.user = {
             first_name: user.first_name,
