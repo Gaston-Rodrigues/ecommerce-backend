@@ -1,5 +1,5 @@
 import { User } from "../Dao/userMananger.js";
-
+import axios from 'axios';
 
 const userMongo = new User()
 
@@ -93,4 +93,48 @@ export const getGoogle = async(req,res)=>{
    res.redirect('/product') //endpoint principal
 
 }
+
+export const handleGoogleLogin = async (req, res) => {
+    const { code } = req.body;
+    const clientId = "417028028525-6cp62mf7v4odj5ek46c3tih1q5acf8e6.apps.googleusercontent.com"; // Reemplaza con tu ID de cliente
+    const clientSecret = "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"; // Reemplaza con tu secreto de cliente
+    const redirectUri = 'localhost:5173'; // Reemplaza con tu URI de redirección
+
+    try {
+        // Intercambio del código de autorización por tokens
+        const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
+            code,
+            client_id: clientId,
+            client_secret: clientSecret,
+            redirect_uri: redirectUri,
+            grant_type: 'authorization_code',
+        });
+
+        const { access_token } = tokenResponse.data;
+
+        // Obtener información del usuario con el token de acceso
+        const userInfoResponse = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`);
+        const userData = userInfoResponse.data;
+
+        // Aquí puedes manejar la creación de usuarios en tu base de datos y devolver la información necesaria al frontend.
+        // Suponiendo que tienes una función para crear o encontrar el usuario en tu base de datos:
+        let user = await userMongo.findOrCreateUser(userData); // Asegúrate de implementar esta función en tu userManager
+
+        req.session.user = {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            age: user.age,
+            email: user.email,
+            role: user.role,
+        };
+
+        res.json({
+            token: access_token,
+            user: user,
+            rol: user.role,
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al intercambiar el código de autorización por un token de acceso.' });
+    }
+};
                                                                                                                                                                                                                                                                             

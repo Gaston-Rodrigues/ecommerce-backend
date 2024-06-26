@@ -42,4 +42,30 @@ export class User{
             return {message: "User dont deleted", error}
          }
     }
+
+    async findOrCreateUser(userData) {
+        try {
+            // Intenta encontrar el usuario por su correo electrónico
+            let user = await userModel.findOne({ email: userData.email });
+
+            // Si no se encuentra el usuario, créalo
+            if (!user) {
+                user = new userModel({
+                    first_name: userData.given_name,
+                    last_name: userData.family_name,
+                    email: userData.email,
+                    // Puedes agregar otros campos que sean relevantes para tu aplicación
+                });
+
+                // Guarda el nuevo usuario en la base de datos
+                await user.save();
+            }
+
+            // Devuelve el usuario encontrado o creado
+            return user;
+        } catch (error) {
+            return { message: "Error finding or creating user", error };
+        }
     }
+}
+    
