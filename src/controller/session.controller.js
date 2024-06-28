@@ -98,7 +98,7 @@ export const handleGoogleLogin = async (req, res) => {
     const { code } = req.body;
     const clientId = "417028028525-6cp62mf7v4odj5ek46c3tih1q5acf8e6.apps.googleusercontent.com"; 
     const clientSecret = "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"; 
-    const redirectUri = 'api/session/product'; 
+    const redirectUri = 'http://localhost:5173/api/session/product'; 
 
     try {
         const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
