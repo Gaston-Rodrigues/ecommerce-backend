@@ -53,7 +53,7 @@ export const loginUser= async(req,res)=>{
         email: req.user.email,
         role: req.user.role
         }
-        res.redirect('/product')
+        res.redirect('/api/session/home')
 }
 
 export const logout= async(req,res)=>{
@@ -88,9 +88,5 @@ export const deleteUser = async(req,res)=>{
     }
 }
 
-export const getGoogle = async(req,res)=>{
-   req.session.user = req.user
-   res.redirect('/product') //endpoint principal
 
-}
                                                                                                                                                                                                                                                                             
